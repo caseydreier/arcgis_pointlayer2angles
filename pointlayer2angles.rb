@@ -4,7 +4,7 @@
 #  OBJECTID2,ORIG_FID1,POINT_X,POINT_Y
 #
 # This script will output the following:
-# ORIG_FID, POINT_X, POINT_Y, ANGLE_FROM_VERTICAL
+# ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG
 #
 # where the angles are measured in radians.
 #

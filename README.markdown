@@ -10,9 +10,9 @@ This is a little script that will take the output of exporting the attribute tab
 How to use
 ----------
 
- * In ArcGIS, draw a bunch of fault lines (or whatever) using a point layer.
- * Add the XY coordinates to your attributes (see: http://ic.ucdavis.edu/information/AddXYCoordsArcGIS9.pdf)
- * export your attributes to a TXT file.  The basic structure should look something like this:
+* In ArcGIS, draw a bunch of fault lines (or whatever) using a point layer.
+* Add the XY coordinates to your attributes (see: http://ic.ucdavis.edu/information/AddXYCoordsArcGIS9.pdf)
+* export your attributes to a TXT file.  The basic structure should look something like this:
 
 <code><pre>
     "OBJECTID","ORIG_FID","POINT_X","POINT_Y"
@@ -23,14 +23,20 @@ How to use
     etc....
 </pre></code>
 
- * Make sure you have Ruby installed (Mac users are all set for this, Windows user: http://rubyinstaller.org/)
- * Clone this repository via git:
+* Make sure you have Ruby installed (Mac users are all set for this, Windows user: http://rubyinstaller.org/)
+* Clone this repository via git:
 
     ```git clone git://github.com/daphonz/arcgis_pointlayer2angles.git```
 
- * Go into the arcgis_pointlayer2angles directory and run:
+* Go into the arcgis_pointlayer2angles directory and run:
 
     ```ruby ./pointlayer2angles.rb your-points-file.txt > your-points-file-with-angles.txt```
+
+The file that is written is in the following format:
+
+```ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG```
+
+Where the ```ORIG_FID``` is the id of the line from ArcGIS.
 
 Configuration
 -------------
