@@ -34,9 +34,9 @@ How to use
 
 The file that is written is in the following format:
 
-```ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG```
+    ```ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG```
 
-Where the ```ORIG_FID``` is the id of the line from ArcGIS.
+Where the ORIG_FID is the id of the line from ArcGIS.
 
 Configuration
 -------------
