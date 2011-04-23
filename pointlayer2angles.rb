@@ -12,6 +12,37 @@
 
 module PointLayer
 
+  class Line
+    attr_accessor :point1, :point2
+
+    # A line class needs two points to define it.
+    def initialize(point1,point2)
+      raise Point::NotAPointError unless point1.responds_like_a_point? && point2.responds_like_a_point?
+      self.point1 = point1
+      self.point2 = point2
+    end
+
+    def delta_x
+      (point2 - point1).x
+    end
+
+    def delta_y
+      (point2 - point1).y
+    end
+
+    def slope
+      delta_y/delta_x
+    end
+
+    def angle_to_horizontal
+      Math::atan2(delta_y, delta_x)
+    end
+
+    def angle_to_vertical
+      (Math::PI/2) - Math::atan2(delta_y, delta_x)
+    end
+  end
+
   class Point < Struct.new(:x, :y)
     class NotAPointError < StandardError; end;
 
