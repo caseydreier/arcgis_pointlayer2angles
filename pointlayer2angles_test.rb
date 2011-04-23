@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'pointlayer2angles'
 
+
 class PointLayer::LineTest < Test::Unit::TestCase
   def test_new_line
     point1 = PointLayer::Point.new(1,1)
