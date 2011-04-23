@@ -114,34 +114,25 @@ module PointLayer
       delta_y/delta_x
     end
 
-    def angle_to_horizontal
-      Math::atan2(delta_y, delta_x)
-    end
-
-    def angle_to_vertical
-      (Math::PI/2) - Math::atan2(delta_y, delta_x)
-    end
-  end
-
-  class Calculator
-
-    def self.calculate!(line_data)
-      data_reader.each do |line_data|
-        point1 = Point.new(line_data.x1, line_data.y1)
-        point2 = Point.new()
+    def angle_to_horizontal(units = 'rad')
+      ang = Math::atan2(delta_y, delta_x)
+      case units
+        when 'rad' then ang
+        when 'deg' then self.class.radians_to_degrees(ang)
       end
     end
 
-    private
-
-    def data_reader=(data_reader_object)
-      @data = data_reader_object
+    def angle_to_vertical(units = 'rad')
+      ang = (Math::PI/2) - Math::atan2(delta_y, delta_x)
+      case units
+        when 'rad' then ang
+        when 'deg' then self.class.radians_to_degrees(ang)
+      end
     end
 
-    def data_reader
-      @data
+    def self.radians_to_degrees(ang)
+      ((180/Math::PI) * ang)
     end
-
   end
 
   class Point < Struct.new(:x, :y)
@@ -171,8 +162,9 @@ points_file = ARGV[0]
 
 # Read the File and output Line Data to STDOUT
 points_data = PointLayer::FileReader.new(:file => points_file)
-puts "ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,ANGLE"
+
+puts "ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG"
 points_data.each do |line_data|
   line = PointLayer::Line.new(PointLayer::Point.new(line_data[:x1], line_data[:y1]), PointLayer::Point.new(line_data[:x2], line_data[:y2]))
-  puts "#{line_data[:group]},#{line_data[:x1]},#{line_data[:x2]},#{line_data[:y2]},#{line.angle_to_vertical}"
+  puts "#{line_data[:group]},#{line_data[:x1]},#{line_data[:y1]},#{line_data[:x2]},#{line_data[:y2]},#{line.angle_to_vertical},#{line.angle_to_vertical('deg')}"
 end
