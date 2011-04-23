@@ -114,24 +114,19 @@ module PointLayer
       delta_y/delta_x
     end
 
-    def angle_to_horizontal(units = 'rad')
+    # Returns the (positive) angle from the horizontal in radians.
+    def angle_to_horizontal
       ang = Math::atan2(delta_y, delta_x)
-      case units
-        when 'rad' then ang
-        when 'deg' then self.class.radians_to_degrees(ang)
-      end
+      (ang < 0) ? (ang + Math::PI) : ang
     end
 
-    def angle_to_vertical(units = 'rad')
+    # Returns the (positive) angle from the vertical in radians.
+    # Note that if the angle is calculated as negative, add PI
+    # so we're looking at the correct angle relative to the veritcal line.
+    # This basically allows angles larger than PI/2 to be properly calculated
+    def angle_to_vertical
       ang = (Math::PI/2) - Math::atan2(delta_y, delta_x)
-      case units
-        when 'rad' then ang
-        when 'deg' then self.class.radians_to_degrees(ang)
-      end
-    end
-
-    def self.radians_to_degrees(ang)
-      ((180/Math::PI) * ang)
+      (ang < 0) ? (ang + Math::PI) : ang
     end
   end
 
@@ -158,6 +153,13 @@ module PointLayer
 
 end
 
+# Extend numeric so we can convert to degrees readily.
+class Numeric
+  def to_degrees
+    self * (180.0/Math::PI)
+  end
+end
+
 points_file = ARGV[0]
 
 # Read the File and output Line Data to STDOUT
@@ -166,5 +168,5 @@ points_data = PointLayer::FileReader.new(:file => points_file)
 puts "ORIG_FID,POINT_X1,POINT_Y1,POINT_X2,POINT_X2,RAD,DEG"
 points_data.each do |line_data|
   line = PointLayer::Line.new(PointLayer::Point.new(line_data[:x1], line_data[:y1]), PointLayer::Point.new(line_data[:x2], line_data[:y2]))
-  puts "#{line_data[:group]},#{line_data[:x1]},#{line_data[:y1]},#{line_data[:x2]},#{line_data[:y2]},#{line.angle_to_vertical},#{line.angle_to_vertical('deg')}"
+  puts "#{line_data[:group]},#{line_data[:x1]},#{line_data[:y1]},#{line_data[:x2]},#{line_data[:y2]},#{line.angle_to_vertical},#{line.angle_to_vertical.to_degrees}"
 end

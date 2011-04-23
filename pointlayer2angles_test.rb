@@ -1,6 +1,14 @@
 require 'test/unit'
 require 'pointlayer2angles'
 
+class NumericTest < Test::Unit::TestCase
+  # Test our extentions of the Math module
+
+  def test_to_degrees
+    assert_equal 90.0, (Math::PI/2).to_degrees
+    assert_equal 0, 0.to_degrees
+  end
+end
 
 class PointLayer::LineTest < Test::Unit::TestCase
   def test_new_line
@@ -106,10 +114,45 @@ class PointLayer::LineTest < Test::Unit::TestCase
     # it's miniscule.
     assert ((Math::PI/6) - line.angle_to_vertical).abs < 5e-15
 
-    # 120 deg
-    point1 = PointLayer::Point.new(0.0,0.0)
-    point2 = PointLayer::Point.new(-(1.0/2.0),(Math::sqrt(3.0)/2.0))
+    # Line with negative x pos.
+    #                 |
+    #           *     |
+    #                 |
+    #   --------------*--------------
+    #                 |
+    #                 |
+    #                 |
+    # Should calculate this as 135 degrees, not -45 deg from vertical
+    point1 = PointLayer::Point.new(0,0)
+    point2 = PointLayer::Point.new(-1, 1)
     line   = PointLayer::Line.new(point1, point2)
+    assert_equal (3.0 * Math::PI/4.0), line.angle_to_vertical
+
+    # Line with negative x and y pos.
+    #                 |
+    #                 |
+    #                 |
+    #   --------------|--------------
+    #               * |
+    #           *     |
+    #                 |
+    point1 = PointLayer::Point.new(-1,-1)
+    point2 = PointLayer::Point.new(-2, -2)
+    line   = PointLayer::Line.new(point1, point2)
+    assert_equal 225, line.angle_to_vertical.to_degrees
+
+    # Line with pos x and neg y.
+    #                 |
+    #                 |
+    #                 |
+    #   --------------|--------------
+    #                 | *
+    #                 |   *
+    #                 |
+    point1 = PointLayer::Point.new(2, -2)
+    point2 = PointLayer::Point.new(1,-1)
+    line   = PointLayer::Line.new(point1, point2)
+    assert_equal 135.0, line.angle_to_vertical.to_degrees
   end
 
 
