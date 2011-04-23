@@ -1,5 +1,4 @@
 module PointLayer
-
   # The FileReader class is responsible for reading in the contents of a PointsLayer file
   # and returning enough data to create Line objects.
   # There is only one public method beyond the initializer, which iterates through a provided
@@ -65,72 +64,5 @@ module PointLayer
     end
 
     attr_accessor :file, :x_index, :y_index, :group_index, :start_line, :separator
-  end
-
-  class Line
-    attr_accessor :point1, :point2
-
-    # A line class needs two points to define it.
-    def initialize(point1,point2)
-      raise Point::NotAPointError unless point1.responds_like_a_point? && point2.responds_like_a_point?
-      self.point1 = point1
-      self.point2 = point2
-    end
-
-    def delta_x
-      (point2 - point1).x
-    end
-
-    def delta_y
-      (point2 - point1).y
-    end
-
-    def slope
-      delta_y/delta_x
-    end
-
-    # Returns the (positive) angle from the horizontal in radians.
-    def angle_to_horizontal
-      ang = Math::atan2(delta_y, delta_x)
-      (ang < 0) ? (ang + Math::PI) : ang
-    end
-
-    # Returns the (positive) angle from the vertical in radians.
-    # Note that if the angle is calculated as negative, add PI
-    # so we're looking at the correct angle relative to the veritcal line.
-    # This basically allows angles larger than PI/2 to be properly calculated
-    def angle_to_vertical
-      ang = (Math::PI/2) - Math::atan2(delta_y, delta_x)
-      (ang < 0) ? (ang + Math::PI) : ang
-    end
-  end
-
-  class Point < Struct.new(:x, :y)
-    class NotAPointError < StandardError; end;
-
-    # Helper methods for adding and subtracting points from each other.
-    # Point.new(1,3) + Point(1,1) == Point(2,4)
-    ['-','+'].each do |operator|
-      class_eval <<-"END"
-        def #{operator}(point)
-          raise Point::NotAPointError unless point.responds_like_a_point?
-          Point.new(self.x.send("#{operator}".to_sym, point.x), self.y.send("#{operator}".to_sym, point.y))
-        end  
-      END
-    end
-
-    # Doesn't have to be a Point object, but it has to quack like one.
-    def responds_like_a_point?
-      respond_to?(:x) && respond_to?(:y)
-    end
-    
-  end
-
-end
-
-# Extend numeric so we can convert to degrees readily.
-class Numeric
-  def to_degrees
-    self * (180.0/Math::PI)
   end
 end

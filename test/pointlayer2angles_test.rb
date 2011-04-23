@@ -1,5 +1,9 @@
 require 'test/unit'
-require 'pointlayer2angles'
+
+# Make sure our lib is in our load path
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+
+require 'pointlayer'
 
 class NumericTest < Test::Unit::TestCase
   # Test our extentions of the Math module

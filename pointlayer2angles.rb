@@ -12,7 +12,7 @@
 # Example usage:
 #   pointlayer2angles point_layer_file.txt > angle_file.txt
 #
-require 'lib/pointlayer.rb'
+require 'lib/pointlayer'
 require 'rdoc/usage'
 def print_usage
   puts "Usage: \t#{$0} points_layer_file.txt > angle_file.txt" #$0 is the name of this file
